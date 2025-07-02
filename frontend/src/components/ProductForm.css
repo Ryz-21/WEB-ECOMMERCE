@@ -1,0 +1,184 @@
+.product-form {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.product-form h3 {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #222;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.product-form input[type="text"],
+.product-form input[type="number"] {
+  width: 93%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+  font-size: 1rem;
+  color: #333;
+  transition: border-color 0.3s ease;
+}
+
+
+.product-form input[type="text"]:focus,
+.product-form input[type="number"]:focus {
+  border-color: #999;
+  outline: none;
+  background-color: #fff;
+}
+
+.product-form select.category-select {
+  width: 100%;  /* aquí puedes ajustar al tamaño que quieras */
+  max-width: 500px; /* ejemplo para que sea más ancho o menos */
+  padding: 1rem 1.5rem; /* más padding si quieres que se vea más grande */
+  margin-bottom: 1.5rem;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  background-color: #fafafa;
+  font-size: 1.1rem;
+  color: #222;
+  transition: border-color 0.3s ease;
+}
+
+.product-form select.category-select:focus {
+  border-color: #666;
+  outline: none;
+  background-color: #fff;
+}
+
+
+.file-upload {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.file-upload input[type="file"] {
+  display: none;
+}
+
+.custom-file-label {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #fafafa;
+  color: #555;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.custom-file-label:hover {
+  background-color: #eee;
+}
+
+.sizes {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.sizes label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: #555;
+  cursor: pointer;
+}
+
+.sizes input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.preview-image {
+  width: 140px;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 1.5rem;
+  display: block;
+  object-fit: cover;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-wrap: nowrap; /* para que no se quiebren en línea */
+  flex-wrap: wrap; /* opcional si quieres que se quiebren en móviles */
+}
+
+
+
+.form-buttons button {
+  background-color: transparent;
+  border: 2px solid #222;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.25s ease;
+  min-width: 120px; /* para que no se vean muy pequeños */
+}
+
+
+.form-buttons button:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+/* Botones de reporte */
+
+.report-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: -1rem;
+  margin-bottom: 3rem;
+}
+
+.report-btn {
+  background-color: #fafafa;
+  border: 2px solid #222;
+  padding: 0.7rem 1.6rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #222;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.report-btn:hover {
+  background-color: #222;
+  color: #fafafa;
+}
+

@@ -1,0 +1,12 @@
+
+.featured {
+  text-align: center;
+  padding: 4rem 1rem;
+  background: linear-gradient(to right, #f9f9f9, #fff);
+  animation: fadeIn 1s ease-in;
+}
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+

@@ -1,5 +1,7 @@
 package com.tuecommerce.backend.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,8 +22,8 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para APIs REST sin sesión stateful
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/auth/**").permitAll() // Permitir acceso a endpoints de auth sin autenticación
-                .anyRequest().authenticated() // Requiere autenticación para cualquier otra petición
+                .requestMatchers("/api/auth/**", "/api/users/**", "/api/categories/**", "/api/products/**").permitAll()// ← Esto permite usuarios sin autenticación
+                .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable()); // Deshabilitar formulario de login predeterminado de Spring Security
 
@@ -38,10 +40,10 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000"); // Permite tu frontend React
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
         config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

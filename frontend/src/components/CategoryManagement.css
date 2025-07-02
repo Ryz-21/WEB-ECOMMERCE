@@ -1,0 +1,90 @@
+/* Contenedor general */
+.category-management-container{
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+/* Botones de exportación */
+.category-management-container button {
+  background-color: transparent;
+  border: 2px solid #222;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-right: 1rem;
+  transition: all 0.25s ease;
+}
+
+.category-management-container button:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+/* Tabla */
+.category-management-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.category-management-container th,
+.category-management-container td {
+  border: 1px solid #ddd;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.category-management-container th {
+  background-color: #f2f2f2;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #333;
+}
+
+.category-management-container tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.category-management-container input,
+.category-management-container select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.category-management-container input:focus,
+.category-management-container select:focus {
+  border-color: #888;
+  outline: none;
+  background-color: #fff;
+}
+
+/* Botones de acción */
+.category-management-container td button {
+  margin: 0 4px;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.category-management-container td button:hover {
+  background-color: #333;
+  color: #fff;
+}

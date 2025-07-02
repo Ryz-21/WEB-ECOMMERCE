@@ -1,28 +1,56 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import jsPDF from "jspdf";               // ✅ Necesario
+import autoTable from "jspdf-autotable"; // ✅ Necesario
+import * as XLSX from "xlsx";
+
 import "./ProductForm.css";
+
 
 const defaultForm = {
   name: "",
-  category: "hombre",
+  category: "Seleccionar",
+  categoryId: "",
   price: "",
   stock: "",
   sizes: [],
   image: ""
 };
 
+
 const allSizes = ["XS", "S", "M", "L", "XL"];
 
-function ProductForm({ onSubmit, product, cancelEdit }) {
+function ProductForm({ product, cancelEdit, fetchProducts }) {
   const [formData, setFormData] = useState(defaultForm);
+  const [allCategories, setAllCategories] = useState([]);
 
   useEffect(() => {
-    if (product) setFormData(product);
-    else setFormData(defaultForm);
+    if (product) {
+      setFormData(product);
+    } else {
+      setFormData(defaultForm);
+    }
   }, [product]);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/categories", { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => setAllCategories(data))
+      .catch((err) => console.error("Error al cargar categorías:", err));
+
+  }, []);
+
+  const filteredCategories = allCategories.filter(
+    (cat) => cat.tipo.toLowerCase() === formData.category.toLowerCase()
+  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "category" ? { categoryId: "" } : {})
+    }));
   };
 
   const handleSizeToggle = (size) => {
@@ -39,97 +67,212 @@ function ProductForm({ onSubmit, product, cancelEdit }) {
     if (file) {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        setFormData({ ...formData, image: ev.target.result });
+        setFormData((prev) => ({ ...prev, image: ev.target.result }));
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.price || !formData.stock || !formData.image) {
+    const { name, price, stock, image, categoryId } = formData;
+    if (!name || !price || !stock || !image || !categoryId) {
       alert("Por favor completa todos los campos.");
       return;
     }
-    onSubmit(formData);
-    setFormData(defaultForm);
+
+    try {
+      if (product) {
+        await axios.put(`http://localhost:8080/api/products/${product.id}`, formData, {
+          withCredentials: true,
+        });
+      } else {
+        await axios.post("http://localhost:8080/api/products", formData, {
+          withCredentials: true,
+        });
+      }
+
+      alert("Producto guardado con éxito");
+      setFormData(defaultForm);
+      if (fetchProducts) fetchProducts(); // recargar lista
+      if (cancelEdit) cancelEdit();
+    } catch (error) {
+      console.error("Error al guardar producto:", error);
+    }
   };
+const exportToExcel = async () => {
+  try {
+    const response = await axios.get("http://localhost:8080/api/products", { withCredentials: true });
+    const products = response.data;
+
+    const exportData = products.map((p) => ({
+      ID: p.id,
+      Nombre: p.name,
+      Tipo: p.category,
+      Categoría: p.categoryId,
+      Precio: p.price,
+      Stock: p.stock,
+      Tallas: p.sizes.join(", "),
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Productos");
+    XLSX.writeFile(wb, "productos.xlsx");
+  } catch (error) {
+    console.error("Error al exportar Excel:", error);
+  }
+};
+
+const exportToPDF = async () => {
+  try {
+    const response = await axios.get("http://localhost:8080/api/products", {
+      withCredentials: true,
+    });
+
+    const products = response.data;
+
+    const doc = new jsPDF();
+
+    const tableColumn = [
+      "ID",
+      "Nombre",
+      "Tipo",
+      "Categoría",
+      "Precio",
+      "Stock",
+      "Tallas",
+    ];
+
+    const tableRows = products.map((p) => [
+      p.id || "",
+      p.name || "",
+      p.category || "",
+      p.categoryId || "",
+      p.price || "",
+      p.stock || "",
+      Array.isArray(p.sizes) ? p.sizes.join(", ") : "",
+    ]);
+
+    doc.text("Reporte de Productos", 14, 15);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+
+    doc.save("productos.pdf");
+  } catch (error) {
+    console.error("Error al exportar PDF:", error);
+    alert("Error al generar el PDF. Revisa la consola.");
+  }
+};
 
   return (
-    <>
-      <form className="product-form" onSubmit={handleSubmit}>
-        <h3>{product ? "Editar producto" : "Panel Administrador"}</h3>
+    <form className="product-form" onSubmit={handleSubmit}>
+      <h3>{product ? "Editar producto" : "Panel Administrador"}</h3>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre del producto"
-          value={formData.name}
-          onChange={handleInputChange}
-        />
+      <input
+        type="text"
+        name="name"
+        placeholder="Nombre del producto"
+        value={formData.name}
+        onChange={handleInputChange}
+      />
 
       <select
-  className="category-select"
-  name="category"
-  value={formData.category}
-  onChange={handleInputChange}
->
-  <option value="hombre">Hombre</option>
-  <option value="mujer">Mujer</option>
-  <option value="niños">Niños</option>
-  <option value="accesorios">Accesorios</option>
-</select>
-        <input
-          type="number"
-          name="price"
-          placeholder="Precio"
-          value={formData.price}
-          onChange={handleInputChange}
-        />
+        className="category-select"
+        name="category"
+        value={formData.category}
+        onChange={handleInputChange}
+      >
+        <option value="hombre">Hombre</option>
+        <option value="mujer">Mujer</option>
+        <option value="niños">Niños</option>
+        <option value="accesorios">Accesorios</option>
+      </select>
 
-        <input
-          type="number"
-          name="stock"
-          placeholder="Cantidad disponible"
-          value={formData.stock}
+      {filteredCategories.length > 0 && (
+        <select
+          name="categoryId"
+          value={formData.categoryId}
           onChange={handleInputChange}
-        />
-
-        <div className="sizes">
-          {allSizes.map((size) => (
-            <label key={size}>
-              <input
-                type="checkbox"
-                checked={formData.sizes.includes(size)}
-                onChange={() => handleSizeToggle(size)}
-              />
-              {size}
-            </label>
+          className="category-select"
+        >
+          <option value="">Seleccionar categoría</option>
+          {filteredCategories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
           ))}
-        </div>
+        </select>
+      )}
 
-        <div className="file-upload">
-          <label htmlFor="imageUpload" className="custom-file-label">Elegir imagen</label>
-          <input
-            type="file"
-            id="imageUpload"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-        </div>
+      <input
+        type="number"
+        name="price"
+        placeholder="Precio"
+        value={formData.price}
+        onChange={handleInputChange}
+      />
 
-        {formData.image && <img src={formData.image} alt="preview" className="preview-image" />}
+      <input
+        type="number"
+        name="stock"
+        placeholder="Cantidad disponible"
+        value={formData.stock}
+        onChange={handleInputChange}
+      />
 
-        <div className="form-buttons">
-          <button type="submit">{product ? "Actualizar" : "Agregar"}</button>
-          {product && <button type="button" onClick={cancelEdit}>Cancelar</button>}
-            <button className="report-btn">Reporte en PDF</button>
-             <button className="report-btn">Reporte en Excel</button>
-        </div>
-      </form>
+      <div className="sizes">
+        {allSizes.map((size) => (
+          <label key={size}>
+            <input
+              type="checkbox"
+              checked={formData.sizes.includes(size)}
+              onChange={() => handleSizeToggle(size)}
+            />
+            {size}
+          </label>
+        ))}
+      </div>
 
-      
-    </>
+      <div className="file-upload">
+        <label htmlFor="imageUpload" className="custom-file-label">
+          Elegir imagen
+        </label>
+        <input
+          type="file"
+          id="imageUpload"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
+      </div>
+
+      {formData.image && (
+        <img
+          src={formData.image}
+          alt="preview"
+          className="preview-image"
+        />
+      )}
+
+      <div className="form-buttons">
+        <button type="submit">{product ? "Actualizar" : "Agregar"}</button>
+        {product && (
+          <button type="button" onClick={cancelEdit}>
+            Cancelar
+          </button>
+        )}
+        <button type="button" className="report-btn" onClick={exportToPDF}>
+          Reporte en PDF
+        </button>
+        <button type="button" className="report-btn" onClick={exportToExcel}>
+          Reporte en Excel
+        </button>
+      </div>
+    </form>
   );
 }
 

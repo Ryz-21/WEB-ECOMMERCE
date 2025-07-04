@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable"; 
 import "./UserManagement.css";
 
 function UserManagement() {
@@ -50,7 +50,7 @@ function UserManagement() {
     const doc = new jsPDF();
     const tableColumn = ["ID", "Username", "Nombres", "Apellidos", "Rol"];
     const tableRows = users.map((u) => [u.id, u.username, u.firstName, u.lastName, u.role]);
-    doc.autoTable({ head: [tableColumn], body: tableRows });
+    autoTable(doc, { head: [tableColumn], body: tableRows });
     doc.save("usuarios.pdf");
   };
 

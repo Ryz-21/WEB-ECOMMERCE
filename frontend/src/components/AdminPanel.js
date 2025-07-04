@@ -3,6 +3,7 @@ import ProductForm from "./ProductForm";
 import "./AdminPanel.css";
 import UserManagement from "./UserManagement";
 import CategoryManagement from "./CategoryManagement";
+import SalesManagement from "./SalesManagement";
 import axios from "axios";
 
 function AdminPanel() {
@@ -45,13 +46,13 @@ function AdminPanel() {
   }
 };
 
+
   return (
     <div className="admin-panel-container">
       {/* NAV DE SECCIONES */}
       <div className="admin-nav">
         <button onClick={() => setActiveView("productos")}>Productos</button>
         <button onClick={() => setActiveView("usuarios")}>Usuarios</button>
-        <button onClick={() => setActiveView("ventas")}>Ventas</button>
         <button onClick={() => setActiveView("categorias")}>Categorías</button>
       </div>
 
@@ -101,12 +102,12 @@ function AdminPanel() {
         </div>
       )}
 
-      {/* SECCIÓN VENTAS */}
-      {activeView === "ventas" && (
-        <div>
-          {/* Contenido de ventas */}
-        </div>
-      )}
+     {/* SECCIÓN VENTAS */}
+{activeView === "ventas" && (
+  <div>
+    <SalesManagement />
+  </div>
+)}
     </div> // 👈 Este cierre faltaba
   );
 }

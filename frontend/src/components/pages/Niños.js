@@ -1,24 +1,13 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import "./Niños.css";
 import { useWishlist } from "../../context/WishlistContext";
 import { useCart } from "../../context/CartContext";
 import { useSearch } from "../../context/SearchContext";
-
-
-const products = [
-  {id:19, name:"Camisa N1B", image:require("../../image/Ropa/Niños/camisa1.jpg"), price: 119.90, category: "Camisa"},
-  {id:20, name:"Polo V1S", image:require("../../image/Ropa/Niños/camisa2.webp"), price: 129.90, category: "Polo"},
-  {id:21, name:"Polo V2S", image:require("../../image/Ropa/Niños/camisa3.webp"), price: 139.90, category: "Polo"},
-  {id:22, name:"Pantalon RS2", image:require("../../image/Ropa/Niños/pantalon1.jpg"), price: 149.90, category: "Pantalón"},
-  {id:23, name:"Pantalon NRB", image:require("../../image/Ropa/Niños/pantalon2.webp"), price: 89.90, category: "Pantalón"},
-  {id:24, name:"Pantalon W2E", image:require("../../image/Ropa/Niños/pantalon3.webp"), price: 89.90, category: "Pantalón"},
-  {id:25, name:"Polera R1", image:require("../../image/Ropa/Niños/polera1.webp"), price: 99.90, category: "Polera"},
-  {id:26, name:"Polera BBG", image:require("../../image/Ropa/Niños/polera2.jpg"), price: 69.90, category: "Polera"},
-  {id:27, name:"Polera MM2", image:require("../../image/Ropa/Niños/polera3.jpg"), price: 74.90, category: "Polera"},
-];
+import axios from "axios";
 
 function Niños() {
- const [selectedProduct, setSelectedProduct] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
@@ -29,15 +18,39 @@ function Niños() {
   const { addToCart } = useCart();
   const { searchTerm } = useSearch();
 
-  
+  const subCategoryMap = {
+    Todos: null,
+    Polo: 11,
+    Camisa: 17,
+    Pantalón: 12,
+    Polera: 13,
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const subCategoryId = subCategoryMap[selectedCategory];
+        const url = subCategoryId
+          ? `http://localhost:8080/api/products/ninosx/${subCategoryId}`
+          : "http://localhost:8080/api/products/ninosx";
+
+        const response = await axios.get(url, { withCredentials: true });
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Error al cargar productos de niños:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [selectedCategory]);
+
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const withinPriceRange = product.price >= minPrice && product.price <= maxPrice;
-    const matchesCategory = selectedCategory === "Todos" || product.category === selectedCategory;
-    return matchesSearch && withinPriceRange && matchesCategory;
+    return matchesSearch && withinPriceRange;
   });
 
-   const closeModal = () => {
+  const closeModal = () => {
     setSelectedProduct(null);
     setQuantity(1);
     setSelectedSize("");
@@ -46,52 +59,41 @@ function Niños() {
   const handleQuantity = (type) => {
     if (type === "inc") setQuantity((q) => q + 1);
     else if (type === "dec" && quantity > 1) setQuantity((q) => q - 1);
-  }; //isInWishlist
+  };
 
   return (
     <section className="niños-page">
-     <div className="filters-box">
-  <div className="price-slider-container">
-    <label className="price-range-label">Filtrar por precio:</label>
-    <div className="slider-values">
-      <span>S/. {minPrice}</span>
-      <span>S/. {maxPrice}</span>
-    </div>
-    <div className="slider">
-      <input
-        type="range"
-        min="0"
-        max="900"
-        step="10"
-        value={minPrice}
-        onChange={(e) => setMinPrice(Number(e.target.value))}
-      />
-      <input
-        type="range"
-        min="0"
-        max="900"
-        step="10"
-        value={maxPrice}
-        onChange={(e) => setMaxPrice(Number(e.target.value))}
-      />
-    </div>
-  </div>
+      {/* Filtros */}
+      <div className="filters-box">
+        <div className="price-slider-container">
+          <label className="price-range-label">Filtrar por precio:</label>
+          <div className="slider-values">
+            <span>S/. {minPrice}</span>
+            <span>S/. {maxPrice}</span>
+          </div>
+          <div className="slider">
+            <input type="range" min="0" max="900" step="10" value={minPrice} onChange={(e) => setMinPrice(Number(e.target.value))} />
+            <input type="range" min="0" max="900" step="10" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} />
+          </div>
+        </div>
 
-  <div className="category-filter">
-    <label className="category-label">Filtrar por categoría:</label>
-    <div className="category-buttons">
-      {["Todos", "Polo", "Camisa", "Pantalón", "Polera"].map((cat) => (
-        <button
-          key={cat}
-          className={`category-btn ${selectedCategory === cat ? "active" : ""}`}
-          onClick={() => setSelectedCategory(cat)}
-        >
-          {cat}
-        </button>
-      ))}
-    </div>
-  </div>
-</div>
+        <div className="category-filter">
+          <label className="category-label">Filtrar por categoría:</label>
+          <div className="category-buttons">
+            {["Todos", "Polo", "Camisa", "Pantalón", "Polera"].map((cat) => (
+              <button
+                key={cat}
+                className={`category-btn ${selectedCategory === cat ? "active" : ""}`}
+                onClick={() => setSelectedCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Productos */}
       <div className="product-grid">
         {filteredProducts.map((product) => (
           <div className="product-card" key={product.id}>
@@ -106,7 +108,7 @@ function Niños() {
 
             <button
               className="like-btn"
-                onClick={() => toggleWishlist({ ...product, size: "M" })}
+              onClick={() => toggleWishlist({ ...product, size: "M" })}
             >
               {isInWishlist(product.id) ? "♡" : "♡"}
             </button>
@@ -114,6 +116,7 @@ function Niños() {
         ))}
       </div>
 
+      {/* Modal */}
       {selectedProduct && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="product-modal" onClick={(e) => e.stopPropagation()}>
@@ -153,7 +156,6 @@ function Niños() {
                 </div>
               </div>
 
-              {/* Botón Agregar al Carrito con integración */}
               <button
                 className="add-to-cart"
                 onClick={() => {
@@ -164,14 +166,12 @@ function Niños() {
               >
                 Agregar al carrito
               </button>
-              
             </div>
           </div>
         </div>
       )}
     </section>
   );
-
 }
 
 export default Niños;

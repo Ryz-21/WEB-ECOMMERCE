@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tuecommerce.backend.model.Product;
+import com.tuecommerce.backend.repository.ProductRepository;
 import com.tuecommerce.backend.service.ProductService;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -22,9 +24,11 @@ import com.tuecommerce.backend.service.ProductService;
 public class ProductController {
 
     private final ProductService productService;
-
-    public ProductController(ProductService service) {
-        this.productService = service;
+     private final ProductRepository productRepository; 
+         
+     public ProductController(ProductService productService, ProductRepository productRepository) {
+        this.productService = productService;
+        this.productRepository = productRepository; // 👈 AÑADIDO
     }
 
     @GetMapping
@@ -59,4 +63,46 @@ public class ProductController {
         productService.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
+@GetMapping("/accesorios")
+public List<Product> getAccesorios() {
+     return productRepository.findByCategoryIgnoreCase("accesorios");
+}
+
+@GetMapping("/accesorios/{categoryId}")
+public List<Product> getAccesoriosByCategory(@PathVariable Long categoryId) {
+    return productRepository.findByCategoryIgnoreCaseAndCategoryId("accesorios", categoryId);
+}
+
+@GetMapping("/mujerx")
+public List<Product> getMujerProducts() {
+    return productRepository.findByCategoryIgnoreCase("mujer");
+}
+
+@GetMapping("/mujerx/{categoryId}")
+public List<Product> getMujerProductsByCategory(@PathVariable Long categoryId) {
+    return productRepository.findByCategoryIgnoreCaseAndCategoryId("mujer", categoryId);
+}
+
+@GetMapping("/hombrex")
+public List<Product> getHombreProducts() {
+    return productRepository.findByCategoryIgnoreCase("hombre");
+}
+
+@GetMapping("/hombrex/{categoryId}")
+public List<Product> getHombreProductsByCategory(@PathVariable Long categoryId) {
+    return productRepository.findByCategoryIgnoreCaseAndCategoryId("hombre", categoryId);
+}
+
+@GetMapping("/ninosx")
+public List<Product> getNinosProducts() {
+    return productRepository.findByCategoryIgnoreCase("niños");
+}
+
+@GetMapping("/ninosx/{categoryId}")
+public List<Product> getNinosProductsByCategory(@PathVariable Long categoryId) {
+    return productRepository.findByCategoryIgnoreCaseAndCategoryId("niños", categoryId);
+}
+
+
 }

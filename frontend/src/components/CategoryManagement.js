@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable"; 
 import "./CategoryManagement.css";
 
 function CategoryManagement() {
@@ -63,7 +63,7 @@ function CategoryManagement() {
     const doc = new jsPDF();
     const tableColumn = ["ID", "Nombre", "Tipo"];
     const tableRows = categories.map((c) => [c.id, c.name, c.tipo]);
-    doc.autoTable({ head: [tableColumn], body: tableRows });
+    autoTable(doc, { head: [tableColumn], body: tableRows });
     doc.save("categorias.pdf");
   };
 

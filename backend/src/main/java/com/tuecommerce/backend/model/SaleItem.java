@@ -1,5 +1,7 @@
 package com.tuecommerce.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +23,7 @@ public class SaleItem {
 
     @ManyToOne
     @JoinColumn(name = "sale_id")
+    @JsonIgnore
     private Sale sale;
 
     // Getters y setters

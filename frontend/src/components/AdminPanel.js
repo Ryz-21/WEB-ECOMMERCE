@@ -54,6 +54,8 @@ function AdminPanel() {
         <button onClick={() => setActiveView("productos")}>Productos</button>
         <button onClick={() => setActiveView("usuarios")}>Usuarios</button>
         <button onClick={() => setActiveView("categorias")}>Categorías</button>
+                <button onClick={() => setActiveView("ventas")}>Ventas</button>
+
       </div>
 
       {/* SECCIÓN PRODUCTOS */}
@@ -105,7 +107,7 @@ function AdminPanel() {
      {/* SECCIÓN VENTAS */}
 {activeView === "ventas" && (
   <div>
-    <SalesManagement />
+    <SalesManagement/>
   </div>
 )}
     </div> // 👈 Este cierre faltaba

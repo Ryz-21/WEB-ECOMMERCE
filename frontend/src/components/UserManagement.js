@@ -23,7 +23,7 @@ function UserManagement() {
 
   const handleDelete = async (id) => {
     if (window.confirm("¿Seguro que quieres eliminar este usuario?")) {
-      await axios.delete(`http://localhost:8080/api/users/${id}`);
+      await axios.delete("http://localhost:8080/api/users/${id}");
       fetchUsers();
     }
   };
@@ -34,7 +34,7 @@ function UserManagement() {
   };
 
   const handleSave = async () => {
-    await axios.put(`http://localhost:8080/api/users/${editingUser.id}`, formData);
+    await axios.put("http://localhost:8080/api/users/${editingUser.id}, formData");
     setEditingUser(null);
     fetchUsers();
   };

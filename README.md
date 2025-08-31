@@ -37,14 +37,14 @@ El sistema permite a los usuarios explorar productos, agregarlos al carrito, gua
 ---
 
 ## 📂 Estructura del proyecto
-
+```
 PROYECTO/
  │── backend/ # API REST con Spring Boot
  │── frontend/ # Aplicación React (CRA)
  │── node_modules/ # Dependencias de React
  │── package.json # Configuración del frontend
  │── backend.zip # Versión comprimida del backend
-
+```
 
 ---
 

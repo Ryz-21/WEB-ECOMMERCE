@@ -51,21 +51,21 @@ PROYECTO/
 ## 🚀 Cómo ejecutar el proyecto
 
 ### 1. Clonar el repositorio
-
+```
 git clone https://github.com/Ryz-21/PROYECTO.git
 cd PROYECTO
-
+```
 ### 2. Levantar el backend (Spring Boot)
-   
+   ```
 cd backend
 mvn spring-boot:run
-
+```
 ### Levantar el frontend (React - Create React App)
-
+```
 cd frontend
 npm install
 npm start
-
+```
 La app correrá en: http://localhost:3000
 
 🔮 Próximas mejoras
@@ -78,9 +78,7 @@ La app correrá en: http://localhost:3000
 
  Optimizar el diseño responsive y la experiencia de usuario.
 
-📸 Preview (opcional)
 
-(Aquí puedes añadir capturas de pantalla de la app si las tienes.)
 
 📧 Autor
 

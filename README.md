@@ -88,3 +88,14 @@ Leo Suasnabar – Technical Programming Student
 🌍 Perú
 
 
+## 🎨 Diseños y Previews
+
+### 🖼️ Home en Figma
+Vista previa del diseño antes de implementarlo en React:
+
+![Home Figma](https://github.com/Ryz-21/WEB-ECOMMERCE/assets/149293207/xxxxxxx)
+
+### ⚛️ Home en React
+Así se ve ya implementado en la aplicación:
+
+![Home React](https://github.com/Ryz-21/WEB-ECOMMERCE/assets/149293207/yyyyyyy)

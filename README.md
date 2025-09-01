@@ -93,9 +93,9 @@ Leo Suasnabar – Technical Programming Student
 ### 🖼️ Home en Figma
 Vista previa del diseño antes de implementarlo en React:
 
-![Home Figma](https://github.com/Ryz-21/WEB-ECOMMERCE/assets/149293207/5c9fba3d-9f8c-45f0-8123-2a87eaa44f1d)
+![Home Figma](https://github.com/Ryz-21/WEB-ECOMMERCE/issues/1#issue-3371170943)
 
 ### ⚛️ Home en React
 Así se ve ya implementado en la aplicación:
 
-![Home React](https://github.com/Ryz-21/WEB-ECOMMERCE/assets/149293207/8a4d12a2-2b3d-4cf7-a451-3c1f1234567e)
+![Home React](https://github.com/Ryz-21/WEB-ECOMMERCE/issues/2#issue-3371171875)

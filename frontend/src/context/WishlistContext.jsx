@@ -7,7 +7,7 @@ export const useWishlist = () => useContext(WishlistContext);
 export const WishlistProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
 
-  // ✅ Añadir un producto con cantidad (sin duplicados)
+  //  Añadir un producto con cantidad (sin duplicados)
   const addToWishlist = (product, quantity = 1) => {
     setWishlist((prev) => {
       const exists = prev.find((item) => item.id === product.id);
@@ -23,7 +23,7 @@ export const WishlistProvider = ({ children }) => {
     });
   };
 
-  // ✅ Alternar entre agregar y quitar
+  // Alternar entre agregar y quitar
   const toggleWishlist = (product) => {
     setWishlist((prev) => {
       const exists = prev.find((item) => item.id === product.id);

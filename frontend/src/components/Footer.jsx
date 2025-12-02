@@ -1,6 +1,6 @@
 // src/components/Footer.js
 import React, { useState } from "react";
-import "./Footer.css";
+import "..styles/Footer.css";
 
 function Footer() {
   const [activePanel, setActivePanel] = useState(null);

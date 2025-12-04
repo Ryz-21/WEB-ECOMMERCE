@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import "./Header.css";
+import "../styles/Header.css";
 import cartIcon from "../image/icons/OIP.png";
 import searchIcon from "../image/icons/search.png";
 import userIcon from "../image/icons/User.png";
 
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
-import { useSearch } from "../context/SearchContext"; // 👈 AÑADIDO
-import { useNavigate } from "react-router-dom"; // 👈 AÑADIDO
-import { useAuth } from "../context/AuthContext"; // 👈 AÑADIDO ultimo 
+import { useSearch } from "../context/SearchContext"; // AÑADIDO
+import { useNavigate } from "react-router-dom"; //  AÑADIDO
+import { useAuth } from "../context/AuthContext"; //  AÑADIDO ultimo 
 
 function Header() {
   const navigate = useNavigate();
   const { wishlist, totalWishlistItems, removeFromWishlist } = useWishlist();
   const { cart, addToCart, removeFromCart } = useCart();
-  const { searchTerm, setSearchTerm } = useSearch(); // 👈 AÑADIDO
+  const { searchTerm, setSearchTerm } = useSearch(); // AÑADIDO
   const { user, setUser } = useAuth();
 
   const [showSidebar, setShowSidebar] = useState(false);
@@ -25,7 +25,7 @@ function Header() {
   const [showCartPanel, setShowCartPanel] = useState(false);
   
 
-  // 📌 Paso 1: Estados para auth
+  //  Paso 1: Estados para auth
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,7 +33,7 @@ function Header() {
   const [lastName, setLastName] = useState("");
   
 
-  // 📌 Paso 2: Funciones de login y registro
+  //  Paso 2: Funciones de login y registro
   const handleLogin = async () => {
   try {
     const response = await fetch("http://localhost:8080/api/auth/login", {
@@ -45,7 +45,7 @@ function Header() {
     const result = await response.json();
 
     if (response.ok) {
-      const { firstName, lastName, username, role } = result; // ✅ agregar role aquí
+      const { firstName, lastName, username, role } = result; // agregar role aquí
       setUser({
         username,
         fullName: `${firstName} ${lastName}`,
@@ -137,7 +137,7 @@ const toggleCartPanel = () => {
     <header className="header">
       <div className="logo">RASS</div>
       
-      {/* 🔍 Búsqueda */}
+      {/*  Búsqueda */}
       <div className="search-container">
         <img src={searchIcon} alt="Buscar" className="search-icon" />
         <input
@@ -155,7 +155,7 @@ const toggleCartPanel = () => {
 </div>
 
       <div className="header-actions">
-        {/* ❤️ Lista de deseos */}
+        {/*  Lista de deseos */}
         <div className="wishlist-wrapper">
           <button className="wishlist-btn" onClick={toggleWishlistPanel} title="Lista de deseos">
             ♡

@@ -50,7 +50,7 @@ public ResponseEntity<?> loginUser(@RequestBody User loginUser) {
         response.put("username", authenticatedUser.getUsername());
         response.put("firstName", authenticatedUser.getFirstName());
         response.put("lastName", authenticatedUser.getLastName());
-        response.put("role", authenticatedUser.getRole().name()); // 👈 aquí
+        response.put("role", authenticatedUser.getRole().name());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
 

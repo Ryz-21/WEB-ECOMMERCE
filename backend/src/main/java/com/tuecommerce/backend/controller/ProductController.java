@@ -28,7 +28,7 @@ public class ProductController {
          
      public ProductController(ProductService productService, ProductRepository productRepository) {
         this.productService = productService;
-        this.productRepository = productRepository; // 👈 AÑADIDO
+        this.productRepository = productRepository; 
     }
 
     @GetMapping

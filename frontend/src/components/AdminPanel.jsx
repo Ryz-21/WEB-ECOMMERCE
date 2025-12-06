@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProductForm from "./ProductForm";
-import "..styles/AdminPanel.css";
+import "../styles/AdminPanel.css";
 import UserManagement from "./UserManagement";
 import CategoryManagement from "./CategoryManagement";
 import SalesManagement from "./SalesManagement";
@@ -12,7 +12,7 @@ function AdminPanel() {
   const [activeView, setActiveView] = useState("productos");
 
 
-   // ✅ Nueva función para obtener productos desde el backend
+   //  Nueva función para obtener productos desde el backend
   const fetchProducts = () => {
     axios.get("http://localhost:8080/api/products", { withCredentials: true })
       .then((res) => setProducts(res.data))
@@ -110,7 +110,7 @@ function AdminPanel() {
     <SalesManagement/>
   </div>
 )}
-    </div> // 👈 Este cierre faltaba
+    </div> //  Este cierre faltaba
   );
 }
 

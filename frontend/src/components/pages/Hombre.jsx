@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Hombre.css";
-import { useWishlist } from "../../context/WishlistContext"; // ❤️ Para wishlist
-import { useCart } from "../../context/CartContext";         // 🛒 Para carrito
+import { useWishlist } from "../../context/WishlistContext"; //  Para wishlist
+import { useCart } from "../../context/CartContext";         //  Para carrito
 import { useSearch } from "../../context/SearchContext";
 import axios from "axios";
 

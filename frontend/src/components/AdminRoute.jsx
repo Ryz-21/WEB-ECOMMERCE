@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 function AdminRoute({ children }) {
   const { user } = useAuth();
 
-  // ✅ Corrige esta validación
+  // Corrigi esta validación
   if (!user || user.role !== "ADMIN") {
     return <Navigate to="/" replace />;
   }

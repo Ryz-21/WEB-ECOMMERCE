@@ -27,7 +27,7 @@ function Mujer() {
   Pantalón: 5,
   Polera: 8
 };
-  // 🔄 useEffect para cargar productos según categoría
+  // useEffect para cargar productos según categoría
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -46,7 +46,7 @@ function Mujer() {
     fetchProducts();
   }, [selectedCategory]);
 
-  // 🧹 Filtro por búsqueda y precio
+  //  Filtro por búsqueda y precio
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const withinPriceRange = product.price >= minPrice && product.price <= maxPrice;

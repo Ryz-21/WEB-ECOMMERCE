@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import jsPDF from "jspdf";               // ✅ Necesario
-import autoTable from "jspdf-autotable"; // ✅ Necesario
+import jsPDF from "jspdf";               
+import autoTable from "jspdf-autotable"; 
 import * as XLSX from "xlsx";
 
 import "./ProductForm.css";

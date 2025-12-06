@@ -3,7 +3,7 @@ import axios from "axios";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable"; 
-import "./CategoryManagement.css";
+import "../styles/CategoryManagement.css";
 
 function CategoryManagement() {
   const [categories, setCategories] = useState([]);

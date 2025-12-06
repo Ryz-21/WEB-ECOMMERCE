@@ -18,7 +18,7 @@ function Accesorios() {
   const { addToCart } = useCart();
   const { searchTerm } = useSearch();
 
-  // 🧠 Mapa de subcategorías a categoryId
+  //  Mapa de subcategorías a categoryId
   const subCategoryMap = {
     Todos: null,
     Aretes: 14,
@@ -27,7 +27,7 @@ function Accesorios() {
     Anillos: 17, // opcional si se agrega en el backend
   };
 
-  // 🔄 useEffect actualizado con filtrado desde backend por categoryId
+  //  useEffect actualizado con filtrado desde backend por categoryId
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -53,7 +53,7 @@ function Accesorios() {
     fetchProducts();
   }, [selectedCategory]);
 
-  // 🧹 Filtrado solo por búsqueda y rango de precio
+  // Filtrado solo por búsqueda y rango de precio
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const withinPriceRange = product.price >= minPrice && product.price <= maxPrice;

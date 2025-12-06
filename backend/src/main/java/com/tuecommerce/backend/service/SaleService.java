@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.tuecommerce.backend.dtos.SaleRequestDTO;
 import com.tuecommerce.backend.model.PaymentInfo;
 import com.tuecommerce.backend.model.Sale;
 import com.tuecommerce.backend.model.SaleItem;
-import com.tuecommerce.backend.model.SaleRequestDTO;
 import com.tuecommerce.backend.repository.SaleRepository;
 
 @Service

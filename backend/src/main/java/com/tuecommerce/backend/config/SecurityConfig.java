@@ -43,7 +43,7 @@
     config.setAllowCredentials(true);
     config.setAllowedOrigins(List.of("http://localhost:3000"));
     config.setAllowedHeaders(List.of("Origin", "Content-Type", "Accept", "Authorization"));
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 👈 AÑADIDO OPTIONS
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); //  AÑADIDO OPTIONS
     config.setMaxAge(3600L); // Para cachear la preflight
 
     source.registerCorsConfiguration("/**", config);

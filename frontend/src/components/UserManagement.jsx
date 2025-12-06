@@ -3,7 +3,7 @@ import axios from "axios";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable"; 
-import "./UserManagement.css";
+import "../styles/UserManagement.css";
 
 function UserManagement() {
   const [users, setUsers] = useState([]);

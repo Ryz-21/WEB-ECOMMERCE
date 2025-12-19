@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tuecommerce.backend.dtos.*;
+import com.tuecommerce.backend.interfaces.*;
 import com.tuecommerce.backend.model.Sale;
 import com.tuecommerce.backend.service.SaleService;
 

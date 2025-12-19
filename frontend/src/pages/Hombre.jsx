@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import "./Niños.css";
-import { useWishlist } from "../../context/WishlistContext";
-import { useCart } from "../../context/CartContext";
-import { useSearch } from "../../context/SearchContext";
+import "../styles/Hombre.css";
+import { useWishlist } from "../context/WishlistContext"; //  Para wishlist
+import { useCart } from "../context/CartContext";         //  Para carrito
+import { useSearch } from "../context/SearchContext";
 import axios from "axios";
 
-function Niños() {
+function Hombre() {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
+
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(900);
 
@@ -20,10 +21,10 @@ function Niños() {
 
   const subCategoryMap = {
     Todos: null,
-    Polo: 11,
-    Camisa: 17,
-    Pantalón: 12,
-    Polera: 13,
+    Polo: 1,
+    Pantalón: 4,
+    Polera: 10,
+    Camisa: 9,
   };
 
   useEffect(() => {
@@ -31,13 +32,13 @@ function Niños() {
       try {
         const subCategoryId = subCategoryMap[selectedCategory];
         const url = subCategoryId
-          ? `http://localhost:8080/api/products/ninosx/${subCategoryId}`
-          : "http://localhost:8080/api/products/ninosx";
+          ? `http://localhost:8080/api/products/hombrex/${subCategoryId}`
+          : "http://localhost:8080/api/products/hombrex";
 
         const response = await axios.get(url, { withCredentials: true });
         setProducts(response.data);
       } catch (error) {
-        console.error("Error al cargar productos de niños:", error);
+        console.error("Error al cargar productos de hombre:", error);
       }
     };
 
@@ -62,8 +63,7 @@ function Niños() {
   };
 
   return (
-    <section className="niños-page">
-      {/* Filtros */}
+    <section className="hombre-page">
       <div className="filters-box">
         <div className="price-slider-container">
           <label className="price-range-label">Filtrar por precio:</label>
@@ -72,8 +72,22 @@ function Niños() {
             <span>S/. {maxPrice}</span>
           </div>
           <div className="slider">
-            <input type="range" min="0" max="900" step="10" value={minPrice} onChange={(e) => setMinPrice(Number(e.target.value))} />
-            <input type="range" min="0" max="900" step="10" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} />
+            <input
+              type="range"
+              min="0"
+              max="900"
+              step="10"
+              value={minPrice}
+              onChange={(e) => setMinPrice(Number(e.target.value))}
+            />
+            <input
+              type="range"
+              min="0"
+              max="900"
+              step="10"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(Number(e.target.value))}
+            />
           </div>
         </div>
 
@@ -93,12 +107,11 @@ function Niños() {
         </div>
       </div>
 
-      {/* Productos */}
       <div className="product-grid">
         {filteredProducts.map((product) => (
           <div className="product-card" key={product.id}>
             <img
-              src={product.image}
+              src={product.image} 
               alt={product.name}
               className="product-image"
               onClick={() => setSelectedProduct(product)}
@@ -116,13 +129,12 @@ function Niños() {
         ))}
       </div>
 
-      {/* Modal */}
       {selectedProduct && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="product-modal" onClick={(e) => e.stopPropagation()}>
             <button className="close-btn" onClick={closeModal}>✕</button>
             <img
-              src={selectedProduct.image}
+              src={selectedProduct.image} 
               alt={selectedProduct.name}
               className="modal-image"
             />
@@ -174,4 +186,4 @@ function Niños() {
   );
 }
 
-export default Niños;
+export default Hombre;

@@ -1,4 +1,4 @@
-package com.tuecommerce.backend.dtos;
+package com.tuecommerce.backend.interfaces;
 
 public class PaymentDTO {
         private String type;

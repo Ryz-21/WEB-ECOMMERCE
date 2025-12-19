@@ -2,18 +2,18 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import Header from "./components/Header";
-import Carousel from "./components/Carousel";
-import Featured from "./components/Featured";
-import Footer from "./components/Footer";
-import Navbar from "./components/Navbar";
-import Mujer from "./components/pages/Mujer";
-import Hombre from "./components/pages/Hombre";
-import Niños from "./components/pages/Niños";
-import Accesorios from "./components/pages/Accesorios";
-import Checkout from "./components/pages/Checkout";
-import AdminPanel from "./components/AdminPanel";
-import AdminRoute from "./components/AdminRoute";
+import Header from "./components/common/Header";
+import Carousel from "./components/common/Carousel";
+import Featured from "./components/common/Featured";
+import Footer from "./components/common/Footer";
+import Navbar from "./components/common/Navbar";
+import Mujer from "./pages/Mujer";
+import Hombre from "./pages/Hombre";
+import Niños from "./pages/Niños";
+import Accesorios from "./pages/Accesorios";
+import Checkout from "./pages/Checkout";
+import AdminPanel from "./components/admin/AdminPanel";
+import AdminRoute from "./components/admin/AdminRoute";
 
 import { WishlistProvider } from "./context/WishlistContext";
 import { CartProvider } from "./context/CartContext";

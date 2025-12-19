@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/Carousel.css";
+import "../../styles/Carousel.css";
 
 const items = [
   { id: 1, name: "", image: "https://static.zara.net/assets/public/2ae0/e55c/36e44f84964e/3c5c35081bda/07446490712-a1/07446490712-a1.jpg?ts=1747840250851&w=352&f=auto" },

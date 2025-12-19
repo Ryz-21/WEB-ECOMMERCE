@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
-import "./Hombre.css";
-import { useWishlist } from "../../context/WishlistContext"; //  Para wishlist
-import { useCart } from "../../context/CartContext";         //  Para carrito
-import { useSearch } from "../../context/SearchContext";
+import React, { useEffect, useState } from "react";
+import "../styles/Accesorios.css"
+import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
+import { useSearch } from "../context/SearchContext";
 import axios from "axios";
 
-function Hombre() {
+function Accesorios() {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
-
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(900);
 
@@ -19,32 +18,42 @@ function Hombre() {
   const { addToCart } = useCart();
   const { searchTerm } = useSearch();
 
+  //  Mapa de subcategorías a categoryId
   const subCategoryMap = {
     Todos: null,
-    Polo: 1,
-    Pantalón: 4,
-    Polera: 10,
-    Camisa: 9,
+    Aretes: 14,
+    Collares: 15,
+    Pulseras: 16,
+    Anillos: 17, // opcional si se agrega en el backend
   };
 
+  //  useEffect actualizado con filtrado desde backend por categoryId
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        let response;
         const subCategoryId = subCategoryMap[selectedCategory];
-        const url = subCategoryId
-          ? `http://localhost:8080/api/products/hombrex/${subCategoryId}`
-          : "http://localhost:8080/api/products/hombrex";
-
-        const response = await axios.get(url, { withCredentials: true });
+        if (subCategoryId) {
+          response = await axios.get(
+            `http://localhost:8080/api/products/accesorios/${subCategoryId}`,
+            { withCredentials: true }
+          );
+        } else {
+          response = await axios.get(
+            "http://localhost:8080/api/products/accesorios",
+            { withCredentials: true }
+          );
+        }
         setProducts(response.data);
       } catch (error) {
-        console.error("Error al cargar productos de hombre:", error);
+        console.error("Error al cargar accesorios:", error);
       }
     };
 
     fetchProducts();
   }, [selectedCategory]);
 
+  // Filtrado solo por búsqueda y rango de precio
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const withinPriceRange = product.price >= minPrice && product.price <= maxPrice;
@@ -63,7 +72,7 @@ function Hombre() {
   };
 
   return (
-    <section className="hombre-page">
+    <section className="Accesorios-page">
       <div className="filters-box">
         <div className="price-slider-container">
           <label className="price-range-label">Filtrar por precio:</label>
@@ -94,7 +103,7 @@ function Hombre() {
         <div className="category-filter">
           <label className="category-label">Filtrar por categoría:</label>
           <div className="category-buttons">
-            {["Todos", "Polo", "Camisa", "Pantalón", "Polera"].map((cat) => (
+            {["Todos", "Collares", "Pulseras", "Aretes", "Anillos"].map((cat) => (
               <button
                 key={cat}
                 className={`category-btn ${selectedCategory === cat ? "active" : ""}`}
@@ -111,14 +120,13 @@ function Hombre() {
         {filteredProducts.map((product) => (
           <div className="product-card" key={product.id}>
             <img
-              src={product.image} 
+              src={product.image}
               alt={product.name}
               className="product-image"
               onClick={() => setSelectedProduct(product)}
             />
             <h3>{product.name}</h3>
             <p className="price">S/. {product.price.toFixed(2)}</p>
-
             <button
               className="like-btn"
               onClick={() => toggleWishlist({ ...product, size: "M" })}
@@ -134,37 +142,35 @@ function Hombre() {
           <div className="product-modal" onClick={(e) => e.stopPropagation()}>
             <button className="close-btn" onClick={closeModal}>✕</button>
             <img
-              src={selectedProduct.image} 
+              src={selectedProduct.image}
               alt={selectedProduct.name}
               className="modal-image"
             />
             <div className="modal-content">
-              <div>
-                <h3>{selectedProduct.name}</h3>
-                <p className="price">S/. {selectedProduct.price.toFixed(2)}</p>
+              <h3>{selectedProduct.name}</h3>
+              <p className="price">S/. {selectedProduct.price.toFixed(2)}</p>
 
-                <div className="sizes">
-                  <label>Tallas:</label>
-                  <div className="size-options">
-                    {["S", "M", "L", "XL"].map((size) => (
-                      <button
-                        key={size}
-                        className={selectedSize === size ? "active" : ""}
-                        onClick={() => setSelectedSize(size)}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
+              <div className="sizes">
+                <label>Tallas:</label>
+                <div className="size-options">
+                  {(selectedProduct.sizes || ["S", "M", "L", "XL"]).map((size) => (
+                    <button
+                      key={size}
+                      className={selectedSize === size ? "active" : ""}
+                      onClick={() => setSelectedSize(size)}
+                    >
+                      {size}
+                    </button>
+                  ))}
                 </div>
+              </div>
 
-                <div className="quantity">
-                  <label>Cantidad:</label>
-                  <div className="qty-controls">
-                    <button onClick={() => handleQuantity("dec")}>−</button>
-                    <span>{quantity}</span>
-                    <button onClick={() => handleQuantity("inc")}>+</button>
-                  </div>
+              <div className="quantity">
+                <label>Cantidad:</label>
+                <div className="qty-controls">
+                  <button onClick={() => handleQuantity("dec")}>−</button>
+                  <span>{quantity}</span>
+                  <button onClick={() => handleQuantity("inc")}>+</button>
                 </div>
               </div>
 
@@ -186,4 +192,4 @@ function Hombre() {
   );
 }
 
-export default Hombre;
+export default Accesorios;

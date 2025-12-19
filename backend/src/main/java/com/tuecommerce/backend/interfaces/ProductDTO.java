@@ -1,6 +1,6 @@
-package com.tuecommerce.backend.dtos;
+package com.tuecommerce.backend.interfaces;
 
- public class ProductDTO {
+ public class ProductDTO{
         private Long productId;
         private String name;
         private double price;

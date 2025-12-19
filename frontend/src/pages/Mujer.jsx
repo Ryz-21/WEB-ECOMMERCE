@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import "./Accesorios.css";
-import { useWishlist } from "../../context/WishlistContext";
-import { useCart } from "../../context/CartContext";
-import { useSearch } from "../../context/SearchContext";
+import "../styles/Mujer.css";
+import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
+import { useSearch } from "../context/SearchContext";
 import axios from "axios";
 
-function Accesorios() {
+
+
+
+function Mujer() {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -18,42 +21,32 @@ function Accesorios() {
   const { addToCart } = useCart();
   const { searchTerm } = useSearch();
 
-  //  Mapa de subcategorías a categoryId
   const subCategoryMap = {
-    Todos: null,
-    Aretes: 14,
-    Collares: 15,
-    Pulseras: 16,
-    Anillos: 17, // opcional si se agrega en el backend
-  };
-
-  //  useEffect actualizado con filtrado desde backend por categoryId
+  Todos: null,
+  Polo: 3,
+  Pantalón: 5,
+  Polera: 8
+};
+  // useEffect para cargar productos según categoría
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        let response;
         const subCategoryId = subCategoryMap[selectedCategory];
-        if (subCategoryId) {
-          response = await axios.get(
-            `http://localhost:8080/api/products/accesorios/${subCategoryId}`,
-            { withCredentials: true }
-          );
-        } else {
-          response = await axios.get(
-            "http://localhost:8080/api/products/accesorios",
-            { withCredentials: true }
-          );
-        }
+        const url = subCategoryId
+          ? `http://localhost:8080/api/products/mujerx/${subCategoryId}`
+          : "http://localhost:8080/api/products/mujerx";
+
+        const response = await axios.get(url, { withCredentials: true });
         setProducts(response.data);
       } catch (error) {
-        console.error("Error al cargar accesorios:", error);
+        console.error("Error al cargar productos de mujer:", error);
       }
     };
 
     fetchProducts();
   }, [selectedCategory]);
 
-  // Filtrado solo por búsqueda y rango de precio
+  //  Filtro por búsqueda y precio
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const withinPriceRange = product.price >= minPrice && product.price <= maxPrice;
@@ -72,7 +65,7 @@ function Accesorios() {
   };
 
   return (
-    <section className="Accesorios-page">
+    <section className="Mujer-page">
       <div className="filters-box">
         <div className="price-slider-container">
           <label className="price-range-label">Filtrar por precio:</label>
@@ -103,7 +96,7 @@ function Accesorios() {
         <div className="category-filter">
           <label className="category-label">Filtrar por categoría:</label>
           <div className="category-buttons">
-            {["Todos", "Collares", "Pulseras", "Aretes", "Anillos"].map((cat) => (
+            {["Todos", "Polo", "Pantalón", "Polera"].map((cat) => (
               <button
                 key={cat}
                 className={`category-btn ${selectedCategory === cat ? "active" : ""}`}
@@ -117,24 +110,28 @@ function Accesorios() {
       </div>
 
       <div className="product-grid">
-        {filteredProducts.map((product) => (
-          <div className="product-card" key={product.id}>
-            <img
-              src={product.image}
-              alt={product.name}
-              className="product-image"
-              onClick={() => setSelectedProduct(product)}
-            />
-            <h3>{product.name}</h3>
-            <p className="price">S/. {product.price.toFixed(2)}</p>
-            <button
-              className="like-btn"
-              onClick={() => toggleWishlist({ ...product, size: "M" })}
-            >
-              {isInWishlist(product.id) ? "♡" : "♡"}
-            </button>
-          </div>
-        ))}
+        {filteredProducts.length === 0 ? (
+          <p>No hay productos en ese rango de precio.</p>
+        ) : (
+          filteredProducts.map((product) => (
+            <div className="product-card" key={product.id}>
+              <img
+                src={product.image}
+                alt={product.name}
+                className="product-image"
+                onClick={() => setSelectedProduct(product)}
+              />
+              <h3>{product.name}</h3>
+              <p className="price">S/. {product.price.toFixed(2)}</p>
+              <button
+                className="like-btn"
+                onClick={() => toggleWishlist({ ...product, size: "M" })}
+              >
+                {isInWishlist(product.id) ? "♡" : "♡"}
+              </button>
+            </div>
+          ))
+        )}
       </div>
 
       {selectedProduct && (
@@ -192,4 +189,4 @@ function Accesorios() {
   );
 }
 
-export default Accesorios;
+export default Mujer;

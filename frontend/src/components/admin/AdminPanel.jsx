@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProductForm from "./ProductForm";
-import "../styles/AdminPanel.css";
+import "../../styles/AdminPanel.css";
 import UserManagement from "./UserManagement";
 import CategoryManagement from "./CategoryManagement";
 import SalesManagement from "./SalesManagement";

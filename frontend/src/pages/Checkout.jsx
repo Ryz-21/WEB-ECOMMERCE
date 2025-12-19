@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
-import { useCart } from "../../context/CartContext";
-import "./Checkout.css";
+import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
+import "../styles/Checkout.css";
 
 function Checkout() {
   const { user } = useAuth();

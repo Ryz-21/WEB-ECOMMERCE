@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
-import "./Mujer.css";
-import { useWishlist } from "../../context/WishlistContext";
-import { useCart } from "../../context/CartContext";
-import { useSearch } from "../../context/SearchContext";
+import React, { useState, useEffect } from "react";
+import "../styles/Niños.css";
+import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
+import { useSearch } from "../context/SearchContext";
 import axios from "axios";
 
-
-
-
-function Mujer() {
+function Niños() {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -22,31 +19,31 @@ function Mujer() {
   const { searchTerm } = useSearch();
 
   const subCategoryMap = {
-  Todos: null,
-  Polo: 3,
-  Pantalón: 5,
-  Polera: 8
-};
-  // useEffect para cargar productos según categoría
+    Todos: null,
+    Polo: 11,
+    Camisa: 17,
+    Pantalón: 12,
+    Polera: 13,
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const subCategoryId = subCategoryMap[selectedCategory];
         const url = subCategoryId
-          ? `http://localhost:8080/api/products/mujerx/${subCategoryId}`
-          : "http://localhost:8080/api/products/mujerx";
+          ? `http://localhost:8080/api/products/ninosx/${subCategoryId}`
+          : "http://localhost:8080/api/products/ninosx";
 
         const response = await axios.get(url, { withCredentials: true });
         setProducts(response.data);
       } catch (error) {
-        console.error("Error al cargar productos de mujer:", error);
+        console.error("Error al cargar productos de niños:", error);
       }
     };
 
     fetchProducts();
   }, [selectedCategory]);
 
-  //  Filtro por búsqueda y precio
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const withinPriceRange = product.price >= minPrice && product.price <= maxPrice;
@@ -65,7 +62,8 @@ function Mujer() {
   };
 
   return (
-    <section className="Mujer-page">
+    <section className="niños-page">
+      {/* Filtros */}
       <div className="filters-box">
         <div className="price-slider-container">
           <label className="price-range-label">Filtrar por precio:</label>
@@ -74,29 +72,15 @@ function Mujer() {
             <span>S/. {maxPrice}</span>
           </div>
           <div className="slider">
-            <input
-              type="range"
-              min="0"
-              max="900"
-              step="10"
-              value={minPrice}
-              onChange={(e) => setMinPrice(Number(e.target.value))}
-            />
-            <input
-              type="range"
-              min="0"
-              max="900"
-              step="10"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
-            />
+            <input type="range" min="0" max="900" step="10" value={minPrice} onChange={(e) => setMinPrice(Number(e.target.value))} />
+            <input type="range" min="0" max="900" step="10" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} />
           </div>
         </div>
 
         <div className="category-filter">
           <label className="category-label">Filtrar por categoría:</label>
           <div className="category-buttons">
-            {["Todos", "Polo", "Pantalón", "Polera"].map((cat) => (
+            {["Todos", "Polo", "Camisa", "Pantalón", "Polera"].map((cat) => (
               <button
                 key={cat}
                 className={`category-btn ${selectedCategory === cat ? "active" : ""}`}
@@ -109,31 +93,30 @@ function Mujer() {
         </div>
       </div>
 
+      {/* Productos */}
       <div className="product-grid">
-        {filteredProducts.length === 0 ? (
-          <p>No hay productos en ese rango de precio.</p>
-        ) : (
-          filteredProducts.map((product) => (
-            <div className="product-card" key={product.id}>
-              <img
-                src={product.image}
-                alt={product.name}
-                className="product-image"
-                onClick={() => setSelectedProduct(product)}
-              />
-              <h3>{product.name}</h3>
-              <p className="price">S/. {product.price.toFixed(2)}</p>
-              <button
-                className="like-btn"
-                onClick={() => toggleWishlist({ ...product, size: "M" })}
-              >
-                {isInWishlist(product.id) ? "♡" : "♡"}
-              </button>
-            </div>
-          ))
-        )}
+        {filteredProducts.map((product) => (
+          <div className="product-card" key={product.id}>
+            <img
+              src={product.image}
+              alt={product.name}
+              className="product-image"
+              onClick={() => setSelectedProduct(product)}
+            />
+            <h3>{product.name}</h3>
+            <p className="price">S/. {product.price.toFixed(2)}</p>
+
+            <button
+              className="like-btn"
+              onClick={() => toggleWishlist({ ...product, size: "M" })}
+            >
+              {isInWishlist(product.id) ? "♡" : "♡"}
+            </button>
+          </div>
+        ))}
       </div>
 
+      {/* Modal */}
       {selectedProduct && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="product-modal" onClick={(e) => e.stopPropagation()}>
@@ -144,30 +127,32 @@ function Mujer() {
               className="modal-image"
             />
             <div className="modal-content">
-              <h3>{selectedProduct.name}</h3>
-              <p className="price">S/. {selectedProduct.price.toFixed(2)}</p>
+              <div>
+                <h3>{selectedProduct.name}</h3>
+                <p className="price">S/. {selectedProduct.price.toFixed(2)}</p>
 
-              <div className="sizes">
-                <label>Tallas:</label>
-                <div className="size-options">
-                  {(selectedProduct.sizes || ["S", "M", "L", "XL"]).map((size) => (
-                    <button
-                      key={size}
-                      className={selectedSize === size ? "active" : ""}
-                      onClick={() => setSelectedSize(size)}
-                    >
-                      {size}
-                    </button>
-                  ))}
+                <div className="sizes">
+                  <label>Tallas:</label>
+                  <div className="size-options">
+                    {["S", "M", "L", "XL"].map((size) => (
+                      <button
+                        key={size}
+                        className={selectedSize === size ? "active" : ""}
+                        onClick={() => setSelectedSize(size)}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <div className="quantity">
-                <label>Cantidad:</label>
-                <div className="qty-controls">
-                  <button onClick={() => handleQuantity("dec")}>−</button>
-                  <span>{quantity}</span>
-                  <button onClick={() => handleQuantity("inc")}>+</button>
+                <div className="quantity">
+                  <label>Cantidad:</label>
+                  <div className="qty-controls">
+                    <button onClick={() => handleQuantity("dec")}>−</button>
+                    <span>{quantity}</span>
+                    <button onClick={() => handleQuantity("inc")}>+</button>
+                  </div>
                 </div>
               </div>
 
@@ -189,4 +174,4 @@ function Mujer() {
   );
 }
 
-export default Mujer;
+export default Niños;

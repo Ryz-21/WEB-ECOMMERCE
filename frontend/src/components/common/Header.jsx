@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import "../styles/Header.css";
-import cartIcon from "../image/icons/OIP.png";
-import searchIcon from "../image/icons/search.png";
-import userIcon from "../image/icons/User.png";
+import "../../styles/Header.css";
+import cartIcon from "../../assets/icons/OIP.png";
+import searchIcon from "../../assets/icons/search.png";
+import userIcon from "../../assets/icons/User.png";
 
-import { useWishlist } from "../context/WishlistContext";
-import { useCart } from "../context/CartContext";
-import { useSearch } from "../context/SearchContext"; // AÑADIDO
+import { useWishlist } from "../../context/WishlistContext";
+import { useCart } from "../../context/CartContext";
+import { useSearch } from "../../context/SearchContext"; // AÑADIDO
 import { useNavigate } from "react-router-dom"; //  AÑADIDO
-import { useAuth } from "../context/AuthContext"; //  AÑADIDO ultimo 
+import { useAuth } from "../../context/AuthContext"; //  AÑADIDO ultimo 
 
 function Header() {
   const navigate = useNavigate();

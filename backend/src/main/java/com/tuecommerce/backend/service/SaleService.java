@@ -31,10 +31,7 @@ public class SaleService {
         sale.setTotal(dto.getTotal());
 
         PaymentInfo payment = new PaymentInfo();
-        payment.setType(dto.getPayment().getType());
-        payment.setCardNumber(dto.getPayment().getCardNumber());
-        payment.setExpiry(dto.getPayment().getExpiry());
-        payment.setCvv(dto.getPayment().getCvv());
+        payment.setPaymentIntentId(dto.getPayment().getPaymentIntentId());
         sale.setPayment(payment);
 
         List<SaleItem> items = dto.getProducts().stream().map(p -> {

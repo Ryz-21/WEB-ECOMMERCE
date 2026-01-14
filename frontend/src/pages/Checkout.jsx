@@ -1,55 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import "../styles/Checkout.css";
 
-function Checkout() {
+const stripePromise = loadStripe("pk_test_51Smfn3Kd5xHVh49U4OAbfa9qaV2krwT0QvFDcrvAPMM4ThTq4gfJLTW0QcVq98AO1GwUBQIhvMPAk3uEIEmJFThz003BnYh1Id"); // Reemplaza con tu clave pública de Stripe
+
+function CheckoutForm() {
   const { user } = useAuth();
   const { cart, clearCart } = useCart();
-
+  const stripe = useStripe();
+  const elements = useElements();
+  const [processing, setProcessing] = useState(false);
   const [name, setName] = useState(user ? user.fullName.split(" ")[0] : "");
   const [lastname, setLastname] = useState(user ? user.fullName.split(" ")[1] || "" : "");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-
-  const [cardType, setCardType] = useState("credito");
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvv, setCvv] = useState("");
+  const [clientSecret, setClientSecret] = useState("");
 
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!phone.trim()) {
-      alert("Debe ingresar un número de teléfono.");
-      return;
-    }
-
-    const payload = {
-      user: user?.username || null,
-      name: user ? user.fullName.split(" ")[0] : name,
-      lastname: user ? user.fullName.split(" ")[1] || "" : lastname,
-      address,
-      phone,
-      total,
-      payment: {
-        type: cardType,
-        cardNumber,
-        expiry,
-        cvv,
-      },
-      products: cart.map((item) => ({
-        productId: item.id,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        size: item.size,
-      })),
+  useEffect(() => {
+    // Crear payment intent en el backend
+    const createPaymentIntent = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/payment/create-intent?amount=" + Math.round(total * 100) + "&currency=usd", {
+          method: 'POST',
+        });
+        if (!response.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+        const data = await response.json();
+        setClientSecret(data.client_secret);
+      } catch (error) {
+        console.error('Error creando payment intent:', error);
+        alert('Error al inicializar el pago. Intenta de nuevo.');
+      }
     };
+    if (total > 0) createPaymentIntent();
+  }, [total]);
 
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!stripe || !elements || processing) return;
+
+  setProcessing(true);
+
+  const cardElement = elements.getElement(CardElement);
+
+  const { error, paymentIntent } = await stripe.confirmCardPayment(
+    clientSecret,
+    {
+      payment_method: {
+        card: cardElement,
+        billing_details: {
+          name: name + " " + lastname,
+          phone: phone,
+          address: { line1: address },
+        },
+      },
+    }
+  );
+
+  if (error) {
+    alert("Error en el pago: " + error.message);
+    setProcessing(false);
+    return;
+  }
+
+  if (paymentIntent.status === "succeeded") {
     try {
+      const payload = {
+        user: user?.username || null,
+        name,
+        lastname,
+        address,
+        phone,
+        total,
+        payment: { paymentIntentId: paymentIntent.id },
+        products: cart.map((item) => ({
+          productId: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          size: item.size,
+        })),
+      };
+
       const response = await fetch("http://localhost:8080/api/sales", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,115 +99,46 @@ function Checkout() {
         alert("Pago procesado correctamente");
         clearCart();
       } else {
-        const errorData = await response.text();
-        alert("Error al procesar el pago: " + errorData);
+        alert("Error al procesar la venta");
       }
     } catch (err) {
-      console.error(err);
-      //alert("Error al conectar con el servidor");
+      alert("Error en el servidor");
     }
-  };
+  }
 
+  setProcessing(false);
+};
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Campos personales */}
+      {!user && (
+        <>
+          <label>Nombre: <input type="text" value={name} onChange={(e) => setName(e.target.value)} required /></label>
+          <label>Apellido: <input type="text" value={lastname} onChange={(e) => setLastname(e.target.value)} required /></label>
+        </>
+      )}
+      <label>Teléfono: <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required /></label>
+      <label>Dirección: <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} required /></label>
+
+      <hr />
+      <h3>Método de pago</h3>
+      <CardElement options={{ style: { base: { fontSize: '16px' } } }} />
+
+      <hr />
+      <div className="total">Total: <strong>${total.toFixed(2)}</strong></div>
+      <button type="submit" disabled={!stripe}>Pagar</button>
+    </form>
+  );
+}
+
+function Checkout() {
   return (
     <div className="checkout-container">
       <h1>Pago</h1>
-      <form onSubmit={handleSubmit}>
-        {/* Mostrar datos personales solo si no hay usuario */}
-        {!user && (
-          <>
-            <label>
-              Nombre:
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </label>
-            <label>
-              Apellido:
-              <input
-                type="text"
-                value={lastname}
-                onChange={(e) => setLastname(e.target.value)}
-                required
-              />
-            </label>
-          </>
-        )}
-
-        <label>
-          Teléfono:
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-          />
-        </label>
-
-        <label>
-          Dirección de envío:
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            required
-          />
-        </label>
-
-        <hr />
-        <h3>Método de pago</h3>
-
-        <label>
-          Tipo de tarjeta:
-          <select value={cardType} onChange={(e) => setCardType(e.target.value)} required>
-            <option value="credito">Crédito</option>
-            <option value="debito">Débito</option>
-          </select>
-        </label>
-
-        <label>
-          Número de tarjeta:
-          <input
-            type="text"
-            maxLength="16"
-            value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
-            required
-          />
-        </label>
-
-        <label>
-          Vencimiento:
-          <input
-            type="text"
-            placeholder="MM/AA"
-            maxLength="5"
-            value={expiry}
-            onChange={(e) => setExpiry(e.target.value)}
-            required
-          />
-        </label>
-
-        <label>
-          CVV:
-          <input
-            type="text"
-            maxLength="3"
-            value={cvv}
-            onChange={(e) => setCvv(e.target.value)}
-            required
-          />
-        </label>
-
-        <hr />
-        <div className="total">
-          Total a pagar: <strong>S/. {total.toFixed(2)}</strong>
-        </div>
-
-        <button type="submit">Pagar</button>
-      </form>
+      <Elements stripe={stripePromise}>
+        <CheckoutForm />
+      </Elements>
     </div>
   );
 }

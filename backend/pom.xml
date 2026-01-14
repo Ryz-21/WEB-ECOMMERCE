@@ -55,7 +55,15 @@
             <version>8.0.33</version>
         </dependency>
 
-        <!-- Dependencias de test -->
+        <!-- Driver para stripe-->
+        <dependency>
+    <groupId>com.stripe</groupId>
+    <artifactId>stripe-java</artifactId>
+    <version>26.12.0</version> <!-- Última versión -->
+    </dependency>
+
+   
+         <!-- Dependencias de test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

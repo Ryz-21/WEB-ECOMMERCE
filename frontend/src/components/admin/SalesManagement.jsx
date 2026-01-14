@@ -49,7 +49,7 @@ function SalesManagement() {
     }
   };
 
-  // ✅ Exportar a Excel
+  // Exportar a Excel
   const exportToExcel = () => {
     const data = sales.map((sale) => ({
       Cliente: `${sale.name} ${sale.lastname}`,
@@ -64,7 +64,7 @@ function SalesManagement() {
     XLSX.writeFile(wb, "ventas.xlsx");
   };
 
-  // ✅ Exportar a PDF
+  // Exportar a PDF
   const exportToPDF = () => {
     const doc = new jsPDF();
     const tableColumn = ["Cliente", "Teléfono", "Dirección", "Total"];

@@ -10,6 +10,7 @@ import "../../styles/ProductForm.css";
 const defaultForm = {
   name: "",
   category: "Seleccionar",
+  tipoProducto: "Seleccionar",
   categoryId: "",
   price: "",
   stock: "",
@@ -20,36 +21,48 @@ const defaultForm = {
 
 const allSizes = ["XS", "S", "M", "L", "XL"];
 
+const subCategoryMaps = {
+  hombre: {
+    Polo: 1,
+    Pantalón: 4,
+    Polera: 10,
+    Camisa: 9,
+  },
+  mujer: {
+    Polo: 3,
+    Pantalón: 5,
+    Polera: 8,
+  },
+  niños: {
+    Polo: 2,
+    Pantalón: 6,
+    Polera: 7,
+  },
+  accesorios: {
+    // agregar si hay
+  },
+};
+
 function ProductForm({ product, cancelEdit, fetchProducts }) {
   const [formData, setFormData] = useState(defaultForm);
-  const [allCategories, setAllCategories] = useState([]);
 
   useEffect(() => {
     if (product) {
-      setFormData(product);
+      const map = subCategoryMaps[product.category] || {};
+      const tipoProducto = Object.keys(map).find(key => map[key] === product.categoryId) || "Seleccionar";
+      setFormData({ ...product, tipoProducto });
     } else {
       setFormData(defaultForm);
     }
   }, [product]);
-
-  useEffect(() => {
-    fetch("http://localhost:8080/api/categories", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => setAllCategories(data))
-      .catch((err) => console.error("Error al cargar categorías:", err));
-
-  }, []);
-
-  const filteredCategories = allCategories.filter(
-    (cat) => cat.tipo.toLowerCase() === formData.category.toLowerCase()
-  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "category" ? { categoryId: "" } : {})
+      ...(name === "category" ? { categoryId: "", tipoProducto: "Seleccionar" } : {}),
+      ...(name === "tipoProducto" ? { categoryId: subCategoryMaps[prev.category]?.[value] || "" } : {})
     }));
   };
 
@@ -75,8 +88,9 @@ function ProductForm({ product, cancelEdit, fetchProducts }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, price, stock, image, categoryId } = formData;
-    if (!name || !price || !stock || !image || !categoryId) {
+    const { name, price, stock, image, categoryId, category } = formData;
+    const hasTypes = Object.keys(subCategoryMaps[category] || {}).length > 0;
+    if (!name || !price || !stock || !image || (hasTypes && !categoryId)) {
       alert("Por favor completa todos los campos.");
       return;
     }
@@ -105,15 +119,19 @@ const exportToExcel = async () => {
     const response = await axios.get("http://localhost:8080/api/products", { withCredentials: true });
     const products = response.data;
 
-    const exportData = products.map((p) => ({
-      ID: p.id,
-      Nombre: p.name,
-      Tipo: p.category,
-      Categoría: p.categoryId,
-      Precio: p.price,
-      Stock: p.stock,
-      Tallas: p.sizes.join(", "),
-    }));
+    const exportData = products.map((p) => {
+      const map = subCategoryMaps[p.category] || {};
+      const tipoProducto = Object.keys(map).find(key => map[key] === p.categoryId) || "N/A";
+      return {
+        ID: p.id,
+        Nombre: p.name,
+        Tipo: p.category,
+        Subtipo: tipoProducto,
+        Precio: p.price,
+        Stock: p.stock,
+        Tallas: p.sizes.join(", "),
+      };
+    });
 
     const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
@@ -138,21 +156,25 @@ const exportToPDF = async () => {
       "ID",
       "Nombre",
       "Tipo",
-      "Categoría",
+      "Subtipo",
       "Precio",
       "Stock",
       "Tallas",
     ];
 
-    const tableRows = products.map((p) => [
-      p.id || "",
-      p.name || "",
-      p.category || "",
-      p.categoryId || "",
-      p.price || "",
-      p.stock || "",
-      Array.isArray(p.sizes) ? p.sizes.join(", ") : "",
-    ]);
+    const tableRows = products.map((p) => {
+      const map = subCategoryMaps[p.category] || {};
+      const tipoProducto = Object.keys(map).find(key => map[key] === p.categoryId) || "N/A";
+      return [
+        p.id || "",
+        p.name || "",
+        p.category || "",
+        tipoProducto,
+        p.price || "",
+        p.stock || "",
+        Array.isArray(p.sizes) ? p.sizes.join(", ") : "",
+      ];
+    });
 
     doc.text("Reporte de Productos", 14, 15);
 
@@ -187,27 +209,26 @@ const exportToPDF = async () => {
         value={formData.category}
         onChange={handleInputChange}
       >
+        <option value="seleccionar">Seleccionar</option>
         <option value="hombre">Hombre</option>
         <option value="mujer">Mujer</option>
         <option value="niños">Niños</option>
         <option value="accesorios">Accesorios</option>
       </select>
 
-      {filteredCategories.length > 0 && (
-        <select
-          name="categoryId"
-          value={formData.categoryId}
-          onChange={handleInputChange}
-          className="category-select"
-        >
-          <option value="">Seleccionar categoría</option>
-          {filteredCategories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      )}
+      <select
+        className="category-select"
+        name="tipoProducto"
+        value={formData.tipoProducto}
+        onChange={handleInputChange}
+      >
+        <option value="Seleccionar">Seleccionar tipo</option>
+        {Object.keys(subCategoryMaps[formData.category] || {}).map((tipo) => (
+          <option key={tipo} value={tipo}>
+            {tipo}
+          </option>
+        ))}
+      </select>
 
       <input
         type="number"

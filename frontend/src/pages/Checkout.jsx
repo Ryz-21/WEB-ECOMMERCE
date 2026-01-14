@@ -5,7 +5,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import "../styles/Checkout.css";
 
-const stripePromise = loadStripe("pk_test_51Smfn3Kd5xHVh49U4OAbfa9qaV2krwT0QvFDcrvAPMM4ThTq4gfJLTW0QcVq98AO1GwUBQIhvMPAk3uEIEmJFThz003BnYh1Id"); // Reemplaza con tu clave pública de Stripe
+const stripePromise = loadStripe("${STRIPE_SECRET_KEY}"); // Reemplaza con tu clave pública de Stripe
 
 function CheckoutForm() {
   const { user } = useAuth();

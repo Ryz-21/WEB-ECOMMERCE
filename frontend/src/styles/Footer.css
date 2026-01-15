@@ -1,0 +1,104 @@
+/* src/components/Footer.css */
+
+.footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid #eee;
+  background-color: #f9f9f9;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.footer-links {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.footer-links button {
+  all: unset;
+  cursor: pointer;
+  color: #252424;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+.footer-links button:hover {
+  color: #b1c0cf;
+}
+
+.address {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.socials {
+  margin-top: 1rem;
+  color: #555;
+}
+
+/* Modal estilos */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.info-modal {
+  background: #fff;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  position: relative;
+  animation: popUp 0.3s ease-in-out;
+  text-align: left;
+}
+
+.info-modal h2 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.info-modal p {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
+@keyframes popUp {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

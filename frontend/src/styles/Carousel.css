@@ -1,0 +1,26 @@
+.carousel {
+  display: flex;
+  overflow-x: hidden;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+.carousel-item {
+  min-width: 300px;
+  position: relative;
+}
+.carousel-item img {
+  width: 100%;
+  border-radius: 8px;
+}
+.info {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.carousel-item {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.carousel-item:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}

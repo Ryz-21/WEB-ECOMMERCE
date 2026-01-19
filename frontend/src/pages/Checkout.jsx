@@ -5,7 +5,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import "../styles/Checkout.css";
 
-const stripePromise = loadStripe("${STRIPE_SECRET_KEY}"); // Reemplaza con tu clave pública de Stripe
+
 
 function CheckoutForm() {
   const { user } = useAuth();

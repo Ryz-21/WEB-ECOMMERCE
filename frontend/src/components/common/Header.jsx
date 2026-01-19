@@ -15,7 +15,7 @@ function Header() {
   const { wishlist, totalWishlistItems, removeFromWishlist } = useWishlist();
   const { cart, addToCart, removeFromCart } = useCart();
   const { searchTerm, setSearchTerm } = useSearch(); // AÑADIDO
-  const { user, setUser } = useAuth();
+  const { user, setUser, logout } = useAuth();
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
@@ -281,8 +281,17 @@ const toggleCartPanel = () => {
     </li>
   )}
 
-  <li><button onClick={() => setShowForm("login")}>Iniciar sesión</button></li>
-  <li><button onClick={() => setShowForm("register")}>Registrarme</button></li>
+  {user ? (
+    <>
+      <li><span className="user-name">👤 {user.fullName}</span></li>
+      <li><button onClick={() => { logout(); setShowSidebar(false); }}>Salir</button></li>
+    </>
+  ) : (
+    <>
+      <li><button onClick={() => setShowForm("login")}>Iniciar sesión</button></li>
+      <li><button onClick={() => setShowForm("register")}>Registrarme</button></li>
+    </>
+  )}
 </ul>
 
             {activeSection === "faq" && (
